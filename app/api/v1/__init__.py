@@ -1,1 +1,1 @@
-""" Endpoints """
+"""Endpoints"""
