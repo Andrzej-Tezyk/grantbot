@@ -1,3 +1,6 @@
+FOCUS ON POLISH LANGUAGE
+
+
 ## Tech Stack
 
 - **Framework**: FastAPI
