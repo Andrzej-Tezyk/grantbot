@@ -1,6 +1,7 @@
 import logging
 from pathlib import Path
 import json
+import csv
 
 import chromadb
 from chromadb.config import Settings as ChromaSettings
@@ -23,6 +24,7 @@ class VectorSearchService:
         self.embedding_model = SentenceTransformer(settings.EMBEDDING_MODEL)
         self.collection = None
 
+
     async def initialize(self):
         """Initialize or get existing collection"""
         try:
@@ -33,6 +35,7 @@ class VectorSearchService:
         except Exception as e:
             log.error(f"Error initlizing collection: {e}")
             raise
+
 
     async def load_documents_from_jsonl(self, filepath: Path):
         """Load documents from JSONL file"""
@@ -65,3 +68,35 @@ class VectorSearchService:
                 ids=ids
             )
             log.info(f"Loaded {len(documents)} documents from {filepath}")
+
+
+    async def load_documents_from_csv(self, filepath: Path):
+        """ Load documents from CSV file """
+        documents = []
+        metadatas = []
+        ids = []
+        
+        with open(filepath, 'r', encoding='utf-8') as f:
+            reader = csv.DictReader(f)
+            for row in reader:
+                documents.append(row['text'])
+                metadatas.append({
+                    'company_id': row['company_id'],
+                    'section_type': row['section_type'],
+                    'language': row.get('language', 'pl'),
+                    'source_type': row.get('source_type', ''),
+                    'created_at': row.get('created_at', '')
+                })
+                ids.append(row['id'])
+        
+        if documents:
+            embeddings = self.embedding_model.encode(documents, show_progress_bar=True)
+            self.collection.add(
+                embeddings=embeddings.tolist(),
+                documents=documents,
+                metadatas=metadatas,
+                ids=ids
+            )
+            log.info(f"Loaded {len(documents)} documents from {filepath}")
+# global instance
+vector_service = VectorSearchService()
