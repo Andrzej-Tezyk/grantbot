@@ -2,6 +2,7 @@ import logging
 from pathlib import Path
 import json
 import csv
+from typing import List, Dict, Any
 
 import chromadb
 from chromadb.config import Settings as ChromaSettings
@@ -98,5 +99,43 @@ class VectorSearchService:
                 ids=ids
             )
             log.info(f"Loaded {len(documents)} documents from {filepath}")
+
+
+    async def search(
+        self,
+        query: str,
+        company_id: str,
+        section_type: str,
+        top_k: int = 5
+    ) -> List[Dict[str, Any]]:
+        """Search for similar documents with filtering"""
+        # Generate query embedding
+        query_embedding = self.embedding_model.encode([query])[0]
+        
+        # Search with filters
+        results = self.collection.query(
+            query_embeddings=[query_embedding.tolist()],
+            n_results=top_k * 3,  # Get more results to filter
+            where={
+                "$and": [
+                    {"company_id": {"$eq": company_id}},
+                    {"section_type": {"$eq": section_type}}
+                ]
+            }
+        )
+        
+        # Format results
+        formatted_results = []
+        if results['ids'] and results['ids'][0]:
+            for i, doc_id in enumerate(results['ids'][0][:top_k]):
+                formatted_results.append({
+                    'id': doc_id,
+                    'text': results['documents'][0][i],
+                    'metadata': results['metadatas'][0][i],
+                    'distance': results['distances'][0][i] if results['distances'] else None
+                })
+                
+        return formatted_results
+
 # global instance
 vector_service = VectorSearchService()
