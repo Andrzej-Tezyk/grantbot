@@ -5,11 +5,11 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.utils.logging import get_custom_logger
-from app.utils.config import settings
+from app.utils import settings
 from app.api.v1 import router_v1
 
 
-log = get_custom_logger("grantbot-api")
+log = get_custom_logger(__name__)
 
 
 @asynccontextmanager

@@ -6,10 +6,10 @@ from fastapi import HTTPException, APIRouter
 
 from app.schemas.models import GenerateSectionResponse, GenerateSectionRequest
 from app.services.vector_search import vector_service
-from app.utils.config import settings
+from app.utils import settings
 
 
-log = logging.getLogger("grantbot-api")
+log = logging.getLogger(__name__)
 
 
 router_generate_secion = APIRouter(prefix="/generate")

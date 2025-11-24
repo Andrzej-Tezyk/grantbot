@@ -8,10 +8,10 @@ import chromadb
 from chromadb.config import Settings as ChromaSettings
 from sentence_transformers import SentenceTransformer
 
-from app.utils.config import settings
+from app.utils import settings
 
 
-log = logging.getLogger("grantbot-api")
+log = logging.getLogger(__name__)
 
 
 class VectorSearchService:
@@ -58,6 +58,7 @@ class VectorSearchService:
                         "created_at": doc.get("created_at", ""),
                     }
                 )
+                ids.append(doc['id'])
 
         if documents:
             embeddings = self.embedding_model.encode(documents, show_progress_bar=True)

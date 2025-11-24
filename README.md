@@ -1,6 +1,11 @@
 FOCUS ON POLISH LANGUAGE
 
 
+## How to run the project?
+
+create .env file in the root and add a variable GEMINI_API_KEY = your_key
+
+
 ## Tech Stack
 
 - **Framework**: FastAPI

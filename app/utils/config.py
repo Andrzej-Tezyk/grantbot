@@ -11,7 +11,7 @@ class Settings(BaseSettings):
     # Vector DB settings
     CHROMA_PERSIST_DIR: str = "./chroma_db"
     COLLECTION_NAME: str = "grant_documents"
-    EMBEDDING_MODEL: str = ""
+    EMBEDDING_MODEL: str = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
     TOP_K_RESULTS: int = 5
 
     # LLM settings
@@ -28,6 +28,3 @@ class Settings(BaseSettings):
     class Config:
         env_file = ".env"
         case_sensitive = True
-
-
-settings = Settings()
