@@ -6,6 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.utils.logging import get_custom_logger
 from app.utils.config import settings
+from app.api.v1 import router_v1
 
 
 log = get_custom_logger("grantbot-api")
@@ -41,4 +42,4 @@ async def root():
     return {"message": "Grantbot", "version": settings.APP_VERSION, "docs": "/docs"}
 
 
-# app.include_router(prefix = "/api/v1/generate_seciton")
+app.include_router(router_v1)
