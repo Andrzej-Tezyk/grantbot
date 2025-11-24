@@ -23,7 +23,7 @@ class VectorSearchService:
             )
         )
         self.embedding_model = SentenceTransformer(settings.EMBEDDING_MODEL)
-        self.collection = None
+        self.collection = None # created in def initizlize
 
 
     async def initialize(self):
@@ -109,14 +109,12 @@ class VectorSearchService:
         top_k: int = 5
     ) -> List[Dict[str, Any]]:
         """Search for similar documents with filtering"""
-        # Generate query embedding
         query_embedding = self.embedding_model.encode([query])[0]
         
-        # Search with filters
         results = self.collection.query(
             query_embeddings=[query_embedding.tolist()],
-            n_results=top_k * 3,  # Get more results to filter
-            where={
+            n_results=top_k * 3,  # more results to filter
+            where={ # filter by metadata
                 "$and": [
                     {"company_id": {"$eq": company_id}},
                     {"section_type": {"$eq": section_type}}
@@ -124,7 +122,6 @@ class VectorSearchService:
             }
         )
         
-        # Format results
         formatted_results = []
         if results['ids'] and results['ids'][0]:
             for i, doc_id in enumerate(results['ids'][0][:top_k]):
@@ -134,8 +131,13 @@ class VectorSearchService:
                     'metadata': results['metadatas'][0][i],
                     'distance': results['distances'][0][i] if results['distances'] else None
                 })
-                
+
         return formatted_results
 
-# global instance
+
+    def get_document_count(self) -> int:
+        """ Get total number of documents in collection """
+        return self.collection.count() if self.collection else 0
+
+
 vector_service = VectorSearchService()
