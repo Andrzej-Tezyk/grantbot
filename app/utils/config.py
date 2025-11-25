@@ -22,7 +22,7 @@ class Settings(BaseSettings):
     # LLM settings
     GEMINI_API_KEY: Optional[str] = os.getenv("GEMINI_API_KEY")
     LLM_MODEL: str = "gemini-2.5-flash" # gemini-2.0-flash (better free limits)
-    LLM_TEMPERATURE: float = 0.7
+    LLM_TEMPERATURE: float = 0.5
 
     # Database settings
     DATABASE_URL: str = ""

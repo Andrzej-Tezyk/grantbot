@@ -1,5 +1,7 @@
 FOCUS ON POLISH LANGUAGE
 
+prompt content depends on task type
+
 
 ## How to run the project?
 
