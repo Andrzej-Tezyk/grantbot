@@ -1,14 +1,11 @@
 from typing import List, Dict, Any
-import logging
 from pathlib import Path
 
 from google import genai
 from google.genai import types
 
-from app.utils import settings
+from app.utils import settings, log
 
-
-log = logging.getLogger(__name__)
 
 # TODO: use other providers than google
 class TextGeneratorService:

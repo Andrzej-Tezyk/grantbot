@@ -4,14 +4,11 @@ from typing import List, Optional
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.utils.logging import get_custom_logger
 from app.utils import settings
 from app.api.v1 import router_v1
 from app.schemas.models import HealthResponse
 from app.services.vector_search import vector_service
-
-
-log = get_custom_logger(__name__)
+from app.utils import log
 
 
 @asynccontextmanager

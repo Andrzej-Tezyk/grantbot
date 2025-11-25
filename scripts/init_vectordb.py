@@ -1,16 +1,12 @@
 import asyncio
 import sys
 from pathlib import Path
-import logging
 
 # add parent directory to path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from app.services.vector_search import vector_service
-from app.utils import settings
-
-
-log = logging.getLogger(__name__)
+from app.utils import settings, log
 
 
 async def main():

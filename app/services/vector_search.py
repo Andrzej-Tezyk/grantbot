@@ -1,4 +1,3 @@
-import logging
 from pathlib import Path
 import json
 import csv
@@ -7,11 +6,7 @@ from typing import List, Dict, Any
 import chromadb
 from chromadb.config import Settings as ChromaSettings
 from sentence_transformers import SentenceTransformer
-
-from app.utils import settings
-
-
-log = logging.getLogger(__name__)
+from app.utils import settings, log
 
 
 class VectorSearchService:

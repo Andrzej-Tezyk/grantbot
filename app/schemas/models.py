@@ -14,7 +14,7 @@ class GenerateSectionRequest(BaseModel):
     company_id: str = Field(description="Company identifier")
     section_type: str = Field(description="Type of section to generate")
     text: str = Field(min_length=10, description="Input text for context search")
-    language: Optional[str] = Field("pl", description="Language code")
+    language: Optional[str] = Field(description="Language code")
     max_sources: Optional[int] = Field(5, ge=1, le=20)  # between 1 and 20
 
 

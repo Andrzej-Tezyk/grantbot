@@ -1,4 +1,3 @@
-import logging
 from uuid import uuid4
 import time
 import datetime
@@ -10,9 +9,7 @@ from app.schemas.models import GenerateSectionResponse, GenerateSectionRequest
 from app.services.vector_search import vector_service
 from app.services.text_generator import text_generator
 from app.utils import settings
-
-
-log = logging.getLogger(__name__)
+from app.utils import log
 
 
 router_generate_secion = APIRouter(prefix="/generate")
