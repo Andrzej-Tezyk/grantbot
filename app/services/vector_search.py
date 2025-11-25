@@ -23,8 +23,7 @@ class VectorSearchService:
             )
         )
         self.embedding_model = SentenceTransformer(settings.EMBEDDING_MODEL)
-        self.collection = None # created in def initizlize
-
+        self.collection = None  # created in def initizlize
 
     async def initialize(self):
         """Initialize or get existing collection"""
@@ -36,7 +35,6 @@ class VectorSearchService:
         except Exception as e:
             log.error(f"Error initlizing collection: {e}")
             raise
-
 
     async def load_documents_from_jsonl(self, filepath: Path):
         """Load documents from JSONL file"""
@@ -58,7 +56,7 @@ class VectorSearchService:
                         "created_at": doc.get("created_at", ""),
                     }
                 )
-                ids.append(doc['id'])
+                ids.append(doc["id"])
 
         if documents:
             embeddings = self.embedding_model.encode(documents, show_progress_bar=True)
@@ -67,77 +65,76 @@ class VectorSearchService:
                 embeddings=embeddings.tolist(),
                 documents=documents,
                 metadatas=metadatas,
-                ids=ids
+                ids=ids,
             )
             log.info(f"Loaded {len(documents)} documents from {filepath}")
 
-
     async def load_documents_from_csv(self, filepath: Path):
-        """ Load documents from CSV file """
+        """Load documents from CSV file"""
         documents = []
         metadatas = []
         ids = []
-        
-        with open(filepath, 'r', encoding='utf-8') as f:
+
+        with open(filepath, "r", encoding="utf-8") as f:
             reader = csv.DictReader(f)
             for row in reader:
-                documents.append(row['text'])
-                metadatas.append({
-                    'company_id': row['company_id'],
-                    'section_type': row['section_type'],
-                    'language': row.get('language', 'pl'),
-                    'source_type': row.get('source_type', ''),
-                    'created_at': row.get('created_at', '')
-                })
-                ids.append(row['id'])
-        
+                documents.append(row["text"])
+                metadatas.append(
+                    {
+                        "company_id": row["company_id"],
+                        "section_type": row["section_type"],
+                        "language": row.get("language", "pl"),
+                        "source_type": row.get("source_type", ""),
+                        "created_at": row.get("created_at", ""),
+                    }
+                )
+                ids.append(row["id"])
+
         if documents:
             embeddings = self.embedding_model.encode(documents, show_progress_bar=True)
             self.collection.add(
                 embeddings=embeddings.tolist(),
                 documents=documents,
                 metadatas=metadatas,
-                ids=ids
+                ids=ids,
             )
             log.info(f"Loaded {len(documents)} documents from {filepath}")
 
-
     async def search(
-        self,
-        query: str,
-        company_id: str,
-        section_type: str,
-        top_k: int = 5
+        self, query: str, company_id: str, section_type: str, top_k: int = 5
     ) -> List[Dict[str, Any]]:
         """Search for similar documents with filtering"""
         query_embedding = self.embedding_model.encode([query])[0]
-        
+
         results = self.collection.query(
             query_embeddings=[query_embedding.tolist()],
             n_results=top_k * 3,  # more results to filter
-            where={ # filter by metadata
+            where={  # filter by metadata
                 "$and": [
                     {"company_id": {"$eq": company_id}},
-                    {"section_type": {"$eq": section_type}}
+                    {"section_type": {"$eq": section_type}},
                 ]
-            }
+            },
         )
-        
+
         formatted_results = []
-        if results['ids'] and results['ids'][0]:
-            for i, doc_id in enumerate(results['ids'][0][:top_k]):
-                formatted_results.append({
-                    'id': doc_id,
-                    'text': results['documents'][0][i],
-                    'metadata': results['metadatas'][0][i],
-                    'distance': results['distances'][0][i] if results['distances'] else None
-                })
+        if results["ids"] and results["ids"][0]:
+            for i, doc_id in enumerate(results["ids"][0][:top_k]):
+                formatted_results.append(
+                    {
+                        "id": doc_id,
+                        "text": results["documents"][0][i],
+                        "metadata": results["metadatas"][0][i],
+                        "distance": (
+                            results["distances"][0][i] if results["distances"] else None
+                        ),
+                    }
+                )
 
         return formatted_results
 
-
     def get_document_count(self) -> int:
-        """ Get total number of documents in collection """
+        """Get total number of documents in collection"""
         return self.collection.count() if self.collection else 0
 
 

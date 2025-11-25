@@ -14,7 +14,7 @@ log = logging.getLogger(__name__)
 
 
 async def main():
-    
+
     try:
         await vector_service.initialize()
     except Exception as e:
@@ -35,7 +35,7 @@ async def main():
         await vector_service.load_documents_from_jsonl(file)
 
     total_docs = vector_service.get_document_count()
-    log.info(f"\\nTotal documents in database: {total_docs}")
+    log.info(f"Total documents in database: {total_docs}")
     log.info("Initialization complete!")
 
 
