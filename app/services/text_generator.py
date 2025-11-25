@@ -17,7 +17,7 @@ class TextGeneratorService:
         query: str,
         section_type: str,
         context_documents: List[Dict[str, Any]],  
-    ):
+    ) -> str:
         """ Generate text based on query and context using Gemini model """
         context = self._build_context(context_documents)
         prompt = self._get_system_prompt(section_type)
@@ -32,7 +32,7 @@ class TextGeneratorService:
                         temperature = settings.LLM_TEMPERATURE
                     )
             )
-            return response
+            return response.text
         except Exception as e:
             log.error(f"Gemini API error: {e}")
             raise
@@ -80,3 +80,5 @@ class TextGeneratorService:
         addition = section_specific.get(section_type, "")
 
         return f"{base_prompt} {addition} {guidelines}"
+
+text_generator = TextGeneratorService()
