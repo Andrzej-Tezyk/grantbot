@@ -16,10 +16,11 @@ log = get_custom_logger(__name__)
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    """Startup and shutdown events"""
+    """Startup and shutdown events."""
 
     log.info("Starting the app.")
-    # init databases
+    await vector_service.initialize()
+    log.info("Vector service initialized.")
 
     log.info("App started successfully.")
 
