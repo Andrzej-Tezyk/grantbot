@@ -1,51 +1,44 @@
-# syntax=docker/dockerfile:1
+ARG PYTHON_VERSION=3.12-slim
+FROM python:${PYTHON_VERSION} AS base
 
-# Comments are provided throughout this file to help you get started.
-# If you need more help, visit the Dockerfile reference guide at
-# https://docs.docker.com/go/dockerfile-reference/
-
-# Want to help us make this template better? Share your feedback here: https://forms.gle/ybq9Krt8jtBL3iCk7
-
-ARG PYTHON_VERSION=3.11.9
-FROM python:${PYTHON_VERSION}-slim as base
-
-# Prevents Python from writing pyc files.
-ENV PYTHONDONTWRITEBYTECODE=1
-
-# Keeps Python from buffering stdout and stderr to avoid situations where
-# the application crashes without emitting any logs due to buffering.
-ENV PYTHONUNBUFFERED=1
+ENV PIP_NO_CACHE_DIR=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1
 
 WORKDIR /app
 
-# Create a non-privileged user that the app will run under.
-# See https://docs.docker.com/go/dockerfile-user-best-practices/
-ARG UID=10001
-RUN adduser \
-    --disabled-password \
-    --gecos "" \
-    --home "/nonexistent" \
-    --shell "/sbin/nologin" \
-    --no-create-home \
-    --uid "${UID}" \
-    appuser
+# System dependencies required by chromadb / sentence-transformers
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+       build-essential \
+       curl \
+       git \
+    && rm -rf /var/lib/apt/lists/*
 
-# Download dependencies as a separate step to take advantage of Docker's caching.
-# Leverage a cache mount to /root/.cache/pip to speed up subsequent builds.
-# Leverage a bind mount to requirements.txt to avoid having to copy them into
-# into this layer.
-RUN --mount=type=cache,target=/root/.cache/pip \
-    --mount=type=bind,source=requirements.txt,target=requirements.txt \
-    python -m pip install -r requirements.txt
+# Install uv
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
+RUN chmod +x /usr/local/bin/uv
 
-# Switch to the non-privileged user to run the application.
-USER appuser
+# Install Python dependencies using uv (respects uv.lock automatically)
+COPY pyproject.toml ./pyproject.toml
+COPY uv.lock ./uv.lock
+RUN uv sync --frozen --no-dev
 
-# Copy the source code into the container.
-COPY . .
+# Copy application source and assets
+COPY app ./app
+COPY scripts ./scripts
+COPY data ./data
 
-# Expose the port that the application listens on.
+# Prepare runtime directories and user
+RUN mkdir -p /app/chroma_db \
+    && useradd --create-home --shell /bin/bash grantbot \
+    && chown -R grantbot:grantbot /app
+
+USER grantbot
+
+ENV CHROMA_PERSIST_DIR=/app/chroma_db \
+    DATA_DIR=/app/data
+
 EXPOSE 8000
 
-# Run the application.
-CMD myapp.example:app
+CMD ["uv", "run", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]

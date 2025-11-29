@@ -11,22 +11,24 @@ def get_custom_logger(
 ) -> logging.Logger:
     """Create custom logger."""
     logger = logging.getLogger(name)
+
+    logger.handlers.clear()
+    logger.filters.clear()
+
     logger.setLevel(logging.DEBUG)
     logger.propagate = False
 
-    if not any(isinstance(h, logging.StreamHandler) for h in logger.handlers):
-        console_handler = logging.StreamHandler()
-        console_handler.setLevel(logging.DEBUG)
-        console_handler.setFormatter(Formatter())
+    console_handler = logging.StreamHandler()
+    console_handler.setLevel(logging.DEBUG)
+    console_handler.setFormatter(Formatter())
 
-        logger.addHandler(console_handler)
+    logger.addHandler(console_handler)
 
     class ServerContextFilter(logging.Filter):
         def filter(self, record: logging.LogRecord) -> bool:
             record.server = server_tag
             return True
 
-    logger.filters.clear()
     logger.addFilter(ServerContextFilter())
 
     return logger
