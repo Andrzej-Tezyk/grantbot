@@ -1,6 +1,6 @@
 from uuid import uuid4
 import time
-import datetime
+from datetime import datetime, timezone
 
 from sqlalchemy.ext.asyncio import AsyncSession
 from fastapi import HTTPException, APIRouter
@@ -79,7 +79,7 @@ async def generate_section(request: GenerateSectionRequest):
             generated_text=generated_text,
             sources=source_ids,
             request_id=request_id,
-            created_at=datetime.utcnow(),
+            created_at=datetime.now(timezone.utc),
             processing_time_ms=processing_time_ms
         )
     

@@ -9,7 +9,7 @@ from app.services.vector_search import vector_service
 from app.utils import settings, log
 
 
-async def main():
+async def init_vector_db():
 
     try:
         await vector_service.initialize()
@@ -20,7 +20,7 @@ async def main():
     data_dir = Path(settings.DATA_DIR)
 
     if not data_dir.exists():
-        log.error(f"Error: Data directory {data_dir} does not exist")
+        log.error(f"Data directory {data_dir} does not exist")
         return
 
     jsonl_files = list(data_dir.glob("*.jsonl"))
@@ -33,7 +33,3 @@ async def main():
     total_docs = vector_service.get_document_count()
     log.info(f"Total documents in database: {total_docs}")
     log.info("Initialization complete!")
-
-
-if __name__ == "__main__":
-    asyncio.run(main())

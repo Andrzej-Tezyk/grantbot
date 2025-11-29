@@ -11,9 +11,9 @@ from app.utils import settings, log
 
 class VectorSearchService:
     def __init__(self):
-        self.client = chromadb.Client(
-            ChromaSettings(
-                persist_directory=settings.CHROMA_PERSIST_DIR,
+        self.client = chromadb.PersistentClient(
+            path=settings.CHROMA_PERSIST_DIR,
+            settings=ChromaSettings(
                 anonymized_telemetry=False,
             )
         )

@@ -18,8 +18,11 @@ class TextGeneratorService:
         """ Generate text based on query and context using Gemini model """
         context = self._build_context(context_documents)
         prompt = self._get_system_prompt(section_type)
+        log.debug(f"Prompt created: {prompt}")
 
-        self.client = genai.Client()
+        if not settings.GEMINI_API_KEY:
+            raise ValueError("GEMINI_API_KEY is not set in environment variables")
+        self.client = genai.Client(api_key=settings.GEMINI_API_KEY)
 
         try:
             response = self.client.models.generate_content(
@@ -64,7 +67,7 @@ class TextGeneratorService:
     def _get_system_prompt(self, section_type: str) -> str:
         base_prompt = "You are an expert in writing grant applications and project financing proposals."
         
-        path_to_guidelines = Path("prompts/gemini_system_prompt.md").parent
+        path_to_guidelines = Path("app/prompts/gemini_system_prompt.md")
         with open(path_to_guidelines, "r", encoding="utf-8") as f:
             guidelines = f.read()
 

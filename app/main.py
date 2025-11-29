@@ -9,6 +9,7 @@ from app.api.v1 import router_v1
 from app.schemas.models import HealthResponse
 from app.services.vector_search import vector_service
 from app.utils import log
+from app.utils.init_vectordb import init_vector_db
 
 
 @asynccontextmanager
@@ -16,7 +17,7 @@ async def lifespan(app: FastAPI):
     """Startup and shutdown events."""
 
     log.info("Starting the app.")
-    await vector_service.initialize()
+    await init_vector_db()
     log.info("Vector service initialized.")
 
     log.info("App started successfully.")
