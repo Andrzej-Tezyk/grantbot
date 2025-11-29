@@ -1,4 +1,4 @@
-from typing import List, Dict, Any
+from typing import Any
 from pathlib import Path
 
 from google import genai
@@ -13,9 +13,9 @@ class TextGeneratorService:
         self,
         query: str,
         section_type: str,
-        context_documents: List[Dict[str, Any]],  
+        context_documents: list[dict[str, Any]],
     ) -> str:
-        """ Generate text based on query and context using Gemini model """
+        """Generate text based on query and context using Gemini model"""
         context = self._build_context(context_documents)
         prompt = self._get_system_prompt(section_type)
         log.debug(f"Prompt created: {prompt}")
@@ -26,20 +26,20 @@ class TextGeneratorService:
 
         try:
             response = self.client.models.generate_content(
-                model = settings.LLM_MODEL,
-                contents = [prompt, context],
-                config = types.GenerateContentConfig(
-                        temperature = settings.LLM_TEMPERATURE
-                    )
+                model=settings.LLM_MODEL,
+                contents=[prompt, context],
+                config=types.GenerateContentConfig(
+                    temperature=settings.LLM_TEMPERATURE
+                ),
             )
             return response.text
         except Exception as e:
             log.error(f"Gemini API error: {e}")
             raise
 
-
-
-    def _build_context(self, documents: List[Dict[str, Any]], max_length: int = 30000) -> str:
+    def _build_context(
+        self, documents: list[dict[str, Any]], max_length: int = 30000
+    ) -> str:
         """
         Build context string from documents
 
@@ -47,28 +47,27 @@ class TextGeneratorService:
         """
         context_parts = []
         total_length = 0
-        
+
         for i, doc in enumerate(documents, 1):
-            doc_text = doc['text']
+            doc_text = doc["text"]
             if total_length + len(doc_text) > max_length:
                 # Truncate if too long
                 remaining = max_length - total_length
                 doc_text = doc_text[:remaining] + "..."
-            
+
             context_parts.append(f"[Dokument {i} - ID: {doc['id']}]\n{doc_text}\n")
             total_length += len(doc_text)
-            
+
             if total_length >= max_length:
                 break
-        
+
         return "\n---\n".join(context_parts)
-    
 
     def _get_system_prompt(self, section_type: str) -> str:
         base_prompt = "You are an expert in writing grant applications and project financing proposals."
-        
+
         path_to_guidelines = Path("app/prompts/gemini_system_prompt.md")
-        with open(path_to_guidelines, "r", encoding="utf-8") as f:
+        with open(path_to_guidelines, encoding="utf-8") as f:
             guidelines = f.read()
 
         section_specific = {
@@ -80,5 +79,6 @@ class TextGeneratorService:
         addition = section_specific.get(section_type, "")
 
         return f"{base_prompt} {addition} {guidelines}"
+
 
 text_generator = TextGeneratorService()

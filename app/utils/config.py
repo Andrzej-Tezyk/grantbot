@@ -1,5 +1,4 @@
 from pydantic_settings import BaseSettings
-from typing import Optional
 import os
 
 from dotenv import load_dotenv
@@ -20,8 +19,8 @@ class Settings(BaseSettings):
     TOP_K_RESULTS: int = 5
 
     # LLM settings
-    GEMINI_API_KEY: Optional[str] = os.getenv("GEMINI_API_KEY")
-    LLM_MODEL: str = "gemini-2.5-flash" # gemini-2.0-flash (better free limits)
+    GEMINI_API_KEY: str | None = os.getenv("GEMINI_API_KEY")
+    LLM_MODEL: str = "gemini-2.5-flash"  # gemini-2.0-flash (better free limits)
     LLM_TEMPERATURE: float = 0.5
 
     # Database settings

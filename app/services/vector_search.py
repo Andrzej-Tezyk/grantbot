@@ -1,7 +1,7 @@
 from pathlib import Path
 import json
 import csv
-from typing import List, Dict, Any
+from typing import Any
 
 import chromadb
 from chromadb.config import Settings as ChromaSettings
@@ -15,7 +15,7 @@ class VectorSearchService:
             path=settings.CHROMA_PERSIST_DIR,
             settings=ChromaSettings(
                 anonymized_telemetry=False,
-            )
+            ),
         )
         self.embedding_model = SentenceTransformer(settings.EMBEDDING_MODEL)
         self.collection = None  # created in def initizlize
@@ -38,7 +38,7 @@ class VectorSearchService:
         metadatas = []
         ids = []
 
-        with open(filepath, "r", encoding="utf-8") as f:
+        with open(filepath, encoding="utf-8") as f:
             for line in f:
                 doc = json.loads(line.strip())
                 documents.append(doc["text"])
@@ -70,7 +70,7 @@ class VectorSearchService:
         metadatas = []
         ids = []
 
-        with open(filepath, "r", encoding="utf-8") as f:
+        with open(filepath, encoding="utf-8") as f:
             reader = csv.DictReader(f)
             for row in reader:
                 documents.append(row["text"])
@@ -97,7 +97,7 @@ class VectorSearchService:
 
     async def search(
         self, query: str, company_id: str, section_type: str, top_k: int = 5
-    ) -> List[Dict[str, Any]]:
+    ) -> list[dict[str, Any]]:
         """Search for similar documents with filtering"""
         query_embedding = self.embedding_model.encode([query])[0]
 

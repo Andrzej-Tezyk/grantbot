@@ -11,10 +11,10 @@ def get_custom_logger(
 ) -> logging.Logger:
     """Create custom logger."""
     logger = logging.getLogger(name)
-    
+
     logger.handlers.clear()
     logger.filters.clear()
-    
+
     logger.setLevel(logging.DEBUG)
     logger.propagate = False
 

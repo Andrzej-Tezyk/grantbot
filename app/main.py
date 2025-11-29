@@ -1,5 +1,4 @@
 from contextlib import asynccontextmanager
-from typing import List, Optional
 
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
@@ -51,7 +50,7 @@ async def health_check():
         return HealthResponse(
             status="healthy",
             vector_db_initialized=doc_count > 0,
-            documents_count=doc_count
+            documents_count=doc_count,
         )
     except Exception as e:
         log.error(f"Health check failed: {e}")
