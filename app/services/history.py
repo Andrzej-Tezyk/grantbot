@@ -87,7 +87,7 @@ class HistoryService:
     async def get_request_by_id(
         session: AsyncSession,
         request_id: UUID
-    ) -> HistoryItem:
+    ) -> HistoryItem | None:
         """Get specific request by ID"""
         try:
             query = select(RequestHistory).where(
