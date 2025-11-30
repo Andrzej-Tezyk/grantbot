@@ -2,13 +2,16 @@ from uuid import uuid4
 import time
 from datetime import datetime, timezone
 
-from fastapi import HTTPException, APIRouter
+from fastapi import HTTPException, APIRouter, Depends
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.schemas.models import GenerateSectionResponse, GenerateSectionRequest
 from app.services.vector_search import vector_service
 from app.services.text_generator import text_generator
+from app.services.history import HistoryService
 from app.utils import settings
 from app.utils import log
+from app.db.database import get_session
 
 
 router_generate_secion = APIRouter(prefix="/generate")
@@ -17,7 +20,9 @@ router_generate_secion = APIRouter(prefix="/generate")
 @router_generate_secion.post(
     "/generate-seciton", response_model=GenerateSectionResponse, tags=["Generation"]
 )
-async def generate_section(request: GenerateSectionRequest):
+async def generate_section(
+    request: GenerateSectionRequest, session: AsyncSession = Depends(get_session)
+):
     """
     Generate a section of grant application based on input text.
 
@@ -63,8 +68,16 @@ async def generate_section(request: GenerateSectionRequest):
 
         processing_time_ms = (time.time() - start_time) * 1000
 
-        # save to history
-        # await HistoryService.
+        await HistoryService.save_request(
+            session=session,
+            request_id=request_id,
+            company_id=request.company_id,
+            section_type=request.section_type,
+            input_text=request.text,
+            generated_text=generated_text,
+            sources=source_ids,
+            processing_time_ms=processing_time_ms,
+        )
 
         log.info(f"Request {request_id} completed in {processing_time_ms:.2f}ms")
 

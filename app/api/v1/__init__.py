@@ -3,7 +3,7 @@
 from fastapi import APIRouter
 
 from app.api.v1.generate_section import router_generate_secion
-from app.api.v1.history import router_history
+from app.api.v1.access_history import router_history
 
 
 router_v1 = APIRouter(prefix="/v1")
