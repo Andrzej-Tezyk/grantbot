@@ -52,6 +52,7 @@ async def generate_section(
             )
 
         log.info(f"Found {len(similar_docs)} similar documents")
+        log.debug(f"Similar docs extracted: {similar_docs}")
 
         # generate text
         log.debug("Starting text generation ...")
@@ -60,9 +61,6 @@ async def generate_section(
             section_type=request.section_type,
             context_documents=similar_docs,
         )
-
-        # +++++++++++++++++++++++++
-        # if generated_text empty
 
         source_ids = [doc["id"] for doc in similar_docs]
 

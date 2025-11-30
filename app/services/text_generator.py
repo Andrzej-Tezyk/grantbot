@@ -70,11 +70,21 @@ class TextGeneratorService:
         with open(path_to_guidelines, encoding="utf-8") as f:
             guidelines = f.read()
 
+        # TODO: config file?
         section_specific = {
-            "market_analysis": "You specialize in market and competition analysis.",
-            "innovation_description": "You specialize in describing innovation and uniqueness of solutions.",
-            "financial_plan": "You specialize in financial planning and project budgeting.",
-            "team_description": "You specialize in presenting the competencies of the project team.",
+            "innovation_description": (
+                "Write a concise and clear description of the innovation, focusing on the technological ",
+                "novelty, use of AI, automation aspects and how the solution improves existing processes.",
+            ),
+            "market_analysis": "Provide a market analysis describing target customers, market needs, trends, competition and factors driving demand for the solution.",
+            "ip_strategy": "Describe the intellectual property strategy, covering ownership of code, licensing of models, data handling rules and protection measures.",
+            "compliance": "Explain compliance and data-protection measures, including GDPR/RODO principles, data minimization, security controls and user rights.",
+            "deliverables": "Describe the planned project deliverables, including documents, software modules, reports, integrations and final outputs.",
+            "budget": "Prepare a structured budget description, outlining cost categories such as personnel, infrastructure, licenses and project operations.",
+            "risk_management": "Identify key risks (technical, operational, regulatory) and describe mitigation strategies and monitoring mechanisms.",
+            "team": "Describe the project team, highlighting competencies, relevant experience and roles needed to execute the project.",
+            "impact": "Explain the expected impact of the project on users, processes or the ecosystem, emphasizing improvements, efficiency and value creation.",
+            "environment": "Describe environmental and sustainability aspects, including energy efficiency, green IT practices and reduction of environmental footprint.",
         }
         addition = section_specific.get(section_type, "")
 

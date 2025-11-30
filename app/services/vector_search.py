@@ -20,8 +20,9 @@ class VectorSearchService:
         self.embedding_model = SentenceTransformer(settings.EMBEDDING_MODEL)
         self.collection = None  # created in def initizlize
 
-    async def initialize(self):
-        """Initialize or get existing collection"""
+    async def initialize(self) -> None:
+        """Initialize or get existing collection and load documents from data
+        directory"""
         try:
             self.collection = self.client.get_or_create_collection(
                 name=settings.COLLECTION_NAME
@@ -129,7 +130,10 @@ class VectorSearchService:
         return formatted_results
 
     def get_document_count(self) -> int:
-        """Get total number of documents in collection"""
+        """
+        Get total number of documents in collection.
+        Not in use for now!
+        """
         return self.collection.count() if self.collection else 0
 
 

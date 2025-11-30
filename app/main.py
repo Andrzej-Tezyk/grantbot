@@ -1,14 +1,12 @@
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.utils import settings
 from app.api.v1 import router_v1
-from app.schemas.models import HealthResponse
-from app.services.vector_search import vector_service
 from app.utils import log
-from app.utils.init_vectordb import init_vector_db
+from app.db.init_vectordb import init_vector_db
 from app.db.database import init_db
 
 
@@ -39,24 +37,10 @@ app.add_middleware(
 )
 
 
-@app.get("/", tags=["Root"])
-async def root():
-    return {"message": "Grantbot", "version": settings.APP_VERSION, "docs": "/docs"}
-
-
-@app.get("/health", response_model=HealthResponse, tags=["Health"])
+@app.get("/health", tags=["Health"])
 async def health_check():
     """Health check endpoint"""
-    try:
-        doc_count = vector_service.get_document_count()
-        return HealthResponse(
-            status="healthy",
-            vector_db_initialized=doc_count > 0,
-            documents_count=doc_count,
-        )
-    except Exception as e:
-        log.error(f"Health check failed: {e}")
-        raise HTTPException(status_code=503, detail="Service unavailable")
+    return {"status": "ok"}
 
 
 app.include_router(router_v1)

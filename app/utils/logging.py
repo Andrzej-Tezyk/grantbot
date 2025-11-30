@@ -15,7 +15,7 @@ def get_custom_logger(
     logger.handlers.clear()
     logger.filters.clear()
 
-    logger.setLevel(logging.DEBUG)
+    logger.setLevel(logging.INFO)
     logger.propagate = False
 
     console_handler = logging.StreamHandler()
