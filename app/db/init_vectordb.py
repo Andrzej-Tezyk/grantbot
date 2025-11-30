@@ -29,4 +29,6 @@ async def init_vector_db():
         log.debug(f"Loading {file.name}...")
         await vector_service.load_documents_from_jsonl(file)
 
+    total_docs = vector_service.get_document_count()
+    log.info(f"Total documents in database: {total_docs}")
     log.info("Initialization complete!")
