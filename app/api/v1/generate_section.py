@@ -20,8 +20,9 @@ router_generate_secion = APIRouter(prefix="/generate")
 @router_generate_secion.post(
     "/generate-seciton", response_model=GenerateSectionResponse, tags=["Generation"]
 )
-async def generate_section(request: GenerateSectionRequest, 
-                           session: AsyncSession = Depends(get_session)):
+async def generate_section(
+    request: GenerateSectionRequest, session: AsyncSession = Depends(get_session)
+):
     """
     Generate a section of grant application based on input text.
 
@@ -75,7 +76,7 @@ async def generate_section(request: GenerateSectionRequest,
             input_text=request.text,
             generated_text=generated_text,
             sources=source_ids,
-            processing_time_ms=processing_time_ms
+            processing_time_ms=processing_time_ms,
         )
 
         log.info(f"Request {request_id} completed in {processing_time_ms:.2f}ms")

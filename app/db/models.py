@@ -18,5 +18,7 @@ class RequestHistory(Base):
     input_text = Column(Text, nullable=False)
     generated_text = Column(Text, nullable=False)
     sources = Column(JSON, nullable=False)
-    created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc), index=True)
+    created_at = Column(
+        DateTime, default=lambda: datetime.now(timezone.utc), index=True
+    )
     processing_time_ms = Column(Float)

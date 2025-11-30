@@ -1,4 +1,4 @@
-from pydantic_settings import BaseSettings # type: ignore[import-not-found]
+from pydantic_settings import BaseSettings  # type: ignore[import-not-found]
 import os
 
 from dotenv import load_dotenv
