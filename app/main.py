@@ -8,7 +8,7 @@ from app.api.v1 import router_v1
 from app.schemas.models import HealthResponse
 from app.services.vector_search import vector_service
 from app.utils import log
-from app.utils.init_vectordb import init_vector_db
+from app.db.init_vectordb import init_vector_db
 from app.db.database import init_db
 
 
