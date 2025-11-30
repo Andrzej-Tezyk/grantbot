@@ -128,7 +128,10 @@ class VectorSearchService:
         return formatted_results
 
     def get_document_count(self) -> int:
-        """Get total number of documents in collection"""
+        """
+        Get total number of documents in collection.
+        Not in use for now!
+        """
         return self.collection.count() if self.collection else 0
 
 

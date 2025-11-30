@@ -3,12 +3,6 @@ from datetime import datetime
 from uuid import UUID
 
 
-class HealthResponse(BaseModel):
-    status: str
-    vector_db_initialized: bool
-    documents_count: int
-
-
 class GenerateSectionRequest(BaseModel):
     company_id: str = Field(description="Company identifier")
     section_type: str = Field(description="Type of section to generate")

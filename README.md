@@ -3,6 +3,7 @@
 - Databases are run from the same container that app itself. Should be put into their own containers
 - Class with hardcoded env variables in utils/config.py to then pass them as settings.VARIABLE, fast solution for small project. Should implement with toml files instead with division between prod/dev.
 - Use of .env is only for dev. Should be Key-value storage instead
+- Use of gemini API instead of Lanchain or LLMlight to be able to use models of other vendors 
 
 
 FOCUS ON POLISH LANGUAGE
