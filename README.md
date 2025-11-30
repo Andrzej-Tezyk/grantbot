@@ -111,8 +111,7 @@ Return Generated Text + Sources
 - **Framework**: FastAPI
 - **Vector Store**: ChromaDB (for local use)
 - **Embeddings**: sentence-transformers (multilingual model)
-- **LLM**: OpenAI API / Anthropic Claude / Azure OpenAI
+- **LLM**: Gemini
 - **Database**: SQLite (history)
 - **Validation**: Pydantic
-- **Testing**: pytest, httpx
 - **Docker**: docker-compose
