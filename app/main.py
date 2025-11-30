@@ -39,11 +39,6 @@ app.add_middleware(
 )
 
 
-@app.get("/", tags=["Root"])
-async def root():
-    return {"message": "Grantbot", "version": settings.APP_VERSION, "docs": "/docs"}
-
-
 @app.get("/health", response_model=HealthResponse, tags=["Health"])
 async def health_check():
     """Health check endpoint"""

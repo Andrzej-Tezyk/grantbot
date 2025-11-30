@@ -26,7 +26,6 @@ RUN uv sync --frozen --no-dev
 
 # Copy application source and assets
 COPY app ./app
-COPY scripts ./scripts
 COPY data ./data
 
 # Prepare runtime directories and user
