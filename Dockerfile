@@ -7,7 +7,7 @@ ENV PIP_NO_CACHE_DIR=1 \
 
 WORKDIR /app
 
-# System dependencies required by chromadb / sentence-transformers
+# system dependencies required by chromadb / sentence-transformers
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
        build-essential \
@@ -15,20 +15,17 @@ RUN apt-get update \
        git \
     && rm -rf /var/lib/apt/lists/*
 
-# Install uv
+# uv
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
 RUN chmod +x /usr/local/bin/uv
 
-# Install Python dependencies using uv (respects uv.lock automatically)
 COPY pyproject.toml ./pyproject.toml
 COPY uv.lock ./uv.lock
 RUN uv sync --frozen --no-dev
 
-# Copy application source and assets
 COPY app ./app
 COPY data ./data
 
-# Prepare runtime directories and user
 RUN mkdir -p /app/chroma_db \
     && useradd --create-home --shell /bin/bash grantbot \
     && chown -R grantbot:grantbot /app
