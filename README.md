@@ -3,6 +3,17 @@ FOCUS ON POLISH LANGUAGE
 prompt content depends on task type
 
 
+
+{
+  "company_id": "123",
+  "section_type": "market_analysis",
+  "text": "dotacyjnego w Polsce rośnie, a kluczową grupą docelową są agencje i firmy pozyskujące",
+  "language": "pl",
+  "max_sources": 5
+}
+
+
+
 ## How to run the project?
 
 create .env file in the root and add a variable GEMINI_API_KEY = your_key

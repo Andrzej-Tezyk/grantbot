@@ -1,3 +1,5 @@
+from uuid import UUID
+
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -56,7 +58,6 @@ async def get_request(
 ):
     """Get specific request by ID"""
     try:
-        from uuid import UUID
         request_uuid = UUID(request_id)
         
         history_item = await HistoryService.get_request_by_id(

@@ -23,7 +23,7 @@ class HistoryService:
         """Save request to history"""
         try:
             history_entry = RequestHistory(
-                request_id=request_id,
+                request_id=str(request_id), # SQLite does not support UUID
                 company_id=company_id,
                 section_type=section_type,
                 input_text=input_text,
@@ -91,7 +91,7 @@ class HistoryService:
         """Get specific request by ID"""
         try:
             query = select(RequestHistory).where(
-                RequestHistory.request_id == request_id
+                RequestHistory.request_id == str(request_id)
             )
             
             result = await session.execute(query)
