@@ -24,7 +24,7 @@ class Settings(BaseSettings):
     LLM_TEMPERATURE: float = 0.5
 
     # Database settings
-    DATABASE_URL: str = ""
+    DATABASE_URL: str = "sqlite+aiosqlite:///./app/db/history.db"
 
     DATA_DIR: str = "./data"
 

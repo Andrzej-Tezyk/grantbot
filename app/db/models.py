@@ -1,7 +1,7 @@
 from sqlalchemy import Column, String, Text, Float, DateTime, JSON
 from sqlalchemy.dialects.postgresql import UUID
 import uuid
-from datetime import datetime
+from datetime import datetime, timezone
 from app.db.database import Base
 
 
@@ -17,5 +17,5 @@ class RequestHistory(Base):
     input_text = Column(Text, nullable=False)
     generated_text = Column(Text, nullable=False)
     sources = Column(JSON, nullable=False)
-    created_at = Column(DateTime, default=datetime.utcnow, index=True)
+    created_at = Column(DateTime, default=datetime.now(timezone.utc), index=True)
     processing_time_ms = Column(Float)

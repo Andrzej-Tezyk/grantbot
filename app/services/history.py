@@ -1,14 +1,12 @@
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, and_
-from typing import List
 from uuid import UUID
-from datetime import datetime
+
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
+
 from app.db.models import RequestHistory
 from app.schemas.models import HistoryItem
-import json
-import logging
+from app.utils import log
 
-logger = logging.getLogger(__name__)
 
 class HistoryService:
     @staticmethod
@@ -19,7 +17,7 @@ class HistoryService:
         section_type: str,
         input_text: str,
         generated_text: str,
-        sources: List[str],
+        sources: list[str],
         processing_time_ms: float
     ) -> RequestHistory:
         """Save request to history"""
@@ -38,20 +36,21 @@ class HistoryService:
             await session.commit()
             await session.refresh(history_entry)
             
-            logger.info(f"Saved history entry: {request_id}")
+            log.info(f"Saved history entry: {request_id}")
             return history_entry
         except Exception as e:
             await session.rollback()
-            logger.error(f"Error saving history: {e}")
+            log.error(f"Error saving history: {e}")
             raise
     
+
     @staticmethod
     async def get_company_history(
         session: AsyncSession,
         company_id: str,
         limit: int = 50,
         section_type: str = ""
-    ) -> List[HistoryItem]:
+    ) -> list[HistoryItem]:
         """Get history for a company"""
         try:
             query = select(RequestHistory).where(
@@ -80,8 +79,9 @@ class HistoryService:
                 for entry in entries
             ]
         except Exception as e:
-            logger.error(f"Error fetching history: {e}")
+            log.error(f"Error fetching history: {e}")
             raise
+    
     
     @staticmethod
     async def get_request_by_id(
@@ -111,5 +111,7 @@ class HistoryService:
                 processing_time_ms=entry.processing_time_ms
             )
         except Exception as e:
-            logger.error(f"Error fetching request: {e}")
+            log.error(f"Error fetching request: {e}")
             raise
+
+history = HistoryService()
