@@ -20,12 +20,20 @@ uv run uvicorn app.main:app --host 0.0.0.0 --port 8000
 
 Once running, visit the interactive API documentation at `http://localhost:8000/docs`
 
-### Example Request
+### Example Requests
 ```json
 {
   "company_id": "123",
   "section_type": "compliance",
   "text": "System przetwarza wyłącznie dane niezbędne",
+  "language": "pl",
+  "max_sources": 5
+}
+
+{
+  "company_id": "123",
+  "section_type": "innovation_description",
+  "text": "Spółka rozwija moduł klasyfikacji dokumentów finansowych z użyciem",
   "language": "pl",
   "max_sources": 5
 }

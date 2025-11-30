@@ -8,6 +8,7 @@ from chromadb.config import Settings as ChromaSettings
 from sentence_transformers import SentenceTransformer
 from app.utils import settings, log
 
+
 class VectorSearchService:
     def __init__(self):
         self.client = chromadb.PersistentClient(

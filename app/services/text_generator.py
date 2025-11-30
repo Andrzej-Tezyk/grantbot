@@ -72,7 +72,10 @@ class TextGeneratorService:
 
         # TODO: config file?
         section_specific = {
-            "innovation_description": "Write a concise and clear description of the innovation, focusing on the technological novelty, use of AI, automation aspects and how the solution improves existing processes.",
+            "innovation_description": (
+                "Write a concise and clear description of the innovation, focusing on the technological ",
+                "novelty, use of AI, automation aspects and how the solution improves existing processes.",
+            ),
             "market_analysis": "Provide a market analysis describing target customers, market needs, trends, competition and factors driving demand for the solution.",
             "ip_strategy": "Describe the intellectual property strategy, covering ownership of code, licensing of models, data handling rules and protection measures.",
             "compliance": "Explain compliance and data-protection measures, including GDPR/RODO principles, data minimization, security controls and user rights.",
@@ -81,8 +84,8 @@ class TextGeneratorService:
             "risk_management": "Identify key risks (technical, operational, regulatory) and describe mitigation strategies and monitoring mechanisms.",
             "team": "Describe the project team, highlighting competencies, relevant experience and roles needed to execute the project.",
             "impact": "Explain the expected impact of the project on users, processes or the ecosystem, emphasizing improvements, efficiency and value creation.",
-            "environment": "Describe environmental and sustainability aspects, including energy efficiency, green IT practices and reduction of environmental footprint."
-            }
+            "environment": "Describe environmental and sustainability aspects, including energy efficiency, green IT practices and reduction of environmental footprint.",
+        }
         addition = section_specific.get(section_type, "")
 
         return f"{base_prompt} {addition} {guidelines}"
